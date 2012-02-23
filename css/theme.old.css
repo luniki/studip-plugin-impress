@@ -1,0 +1,63 @@
+body {
+    font-family: 'PT Sans', sans-serif;
+
+    background: rgb(215, 215, 215);
+    background: -webkit-gradient(radial, 50% 50%, 0, 50% 50%, 500, from(rgb(240, 240, 240)), to(rgb(190, 190, 190)));
+    background: -webkit-radial-gradient(rgb(240, 240, 240), rgb(190, 190, 190));
+    background:    -moz-radial-gradient(rgb(240, 240, 240), rgb(190, 190, 190));
+    background:      -o-radial-gradient(rgb(240, 240, 240), rgb(190, 190, 190));
+    background:         radial-gradient(rgb(240, 240, 240), rgb(190, 190, 190));
+}
+
+a {
+    padding: 0 0.1em;
+    background: rgba(255,255,255,0.5);
+    text-shadow: -1px -1px 2px rgba(100,100,100,0.9);
+    border-radius: 0.2em;
+}
+
+a:hover {
+    background: rgba(255,255,255,1);
+    text-shadow: -1px -1px 2px rgba(100,100,100,0.5);
+}
+
+h1, h1 a {
+        font-size: 68px;
+        line-height: 72px;
+        margin-bottom: 10px;
+}
+h2 {
+        font-size: 42px;
+}
+h4 {
+        font-size: 32px;
+        line-height: 32px;
+        margin-left: 50px;
+}
+
+.step {
+    font-family: 'PT Serif', georgia, serif;
+
+    font-size: 48px;
+    line-height: 1.5;
+}
+
+.step ul {
+        margin-left: 20px;
+}
+.step ul li {
+        list-style: disc;
+        font-size: 20px;
+}
+
+.step big {
+    font-size: 190px;
+}
+
+.step small {
+    font-size: 32px;
+}
+
+.step .indent {
+    padding-left: 1.5em;
+}

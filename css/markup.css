@@ -1,0 +1,14 @@
+.impress-step {
+    font-style: italic;
+    border: 1px solid #ddd;
+    color: rgba(0, 0, 0, 0.5);
+    margin: 1em 1em 1em 0;
+    padding: 0.5em;
+    background: #fff;
+    box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.05);
+}
+
+.impress-step hr {
+    border: none;
+    border-top: 1px solid #ccc;
+}
