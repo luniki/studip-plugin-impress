@@ -56,7 +56,7 @@ class StudipImpress extends StudipPlugin implements StandardPlugin
                                     compact("keyword", "version"),
                                     'show');
 
-        $course_nav = new Navigation('Impress');
+        $course_nav = new Navigation('Preso²');
         $course_nav->setURL($url);
         Navigation::addItem('/course/wiki/impress', $course_nav);
     }
@@ -103,10 +103,16 @@ class StudipImpress extends StudipPlugin implements StandardPlugin
         $page = getWikiPage(Request::option("keyword"), Request::option("version", ""));
 
 
-        $meta = $this->extractMetaData($page);
+        $page['meta'] = $this->extractMetaData($page);
 
         # generate slides from wiki markup
-        $page['slides'] = $this->extractSlides($page);
+        $tree = $this->extractSlides($page);
+
+        if (!$this->hasOptions($tree) && !isset($page['meta']['template'])) {
+            $page['meta']['template'] = 'simple';
+        }
+
+        $page['slides'] = $tree;
 
         # render slides
         $factory = new Flexi_TemplateFactory(dirname(__FILE__) . '/templates/');
@@ -128,24 +134,71 @@ class StudipImpress extends StudipPlugin implements StandardPlugin
 
     function extractSlides($page)
     {
-        $result = preg_match_all('/^(@STEP.*)$/m', $page['body'], $matches,
-                                 PREG_OFFSET_CAPTURE);
+        $tokens = $this->tokenizePage($page['body']);
+        $slides = $this->parseTokens($tokens);
 
-        $slides = array();
-        for ($i = 0, $offsets = $matches[0]; $i < sizeof($offsets); ++$i) {
-            $next    = @$offsets[$i + 1][1] ?: strlen($page['body']);
-            $divider = $offsets[$i][0];
-            $offset  = $offsets[$i][1] + strlen($divider) + 1;
+        return $slides;
+    }
 
-            $slides[] = array(
-                "options" => $this->extractOptions($divider),
-                "text"    => substr($page['body'], $offset, $next - $offset)
-            );
+    function tokenizePage($page)
+    {
+        $tokens = array();
+        $pos = 0;
+        $pattern = '/(?P<start>\[step(?P<options>.*?)?\])|(?P<end>\[\/step\])/';
+        while (preg_match($pattern, $page, $match, PREG_OFFSET_CAPTURE, $pos)) {
+
+            # collect non-matched text
+            $text = substr($page, $pos, $match[0][1] - $pos);
+            if (!preg_match('/^\s*$/', $text)) {
+                $tokens[] = array('TEXT', $text);
+            }
+
+            # and update position
+            $pos = $match[0][1];
+
+            # add start token
+            if (@$match['start'][1] > -1) {
+                $tokens[] = array('START', $this->extractOptions($match['options'][0]));
+            }
+
+            # ... or end token
+            else if  (@$match['end'][1] > -1) {
+                $tokens[] = array('END');
+            }
+
+            # jump behind match
+            $pos += strlen($match[0][0]);
         }
 
-        return $this->areSlidesPositioned($slides)
-            ? $slides
-            : $this->positionSlides($slides);
+        # text remaining?
+        if ($pos < strlen($page) - 1) {
+            $tokens[] = array('TEXT', substr($page, $pos));
+        }
+
+        return $tokens;
+    }
+
+    function parseTokens($tokens, $node = NULL)
+    {
+        while (list($key, $token) = each($tokens)) {
+
+            if ('TEXT' === $token[0]) {
+                if ($node) {
+                    $node['text'] .= $token[1];
+                }
+            }
+
+            else if ('START' === $token[0]) {
+                $step = array('text' => '', 'options' => $token[1]);
+                $this->parseTokens(&$tokens, &$step);
+                $node['slides'][] = $step;
+            }
+
+            else if ('END' === $token[0]) {
+                return $node;
+            }
+        }
+        return $node;
     }
 
     function extractOptions($string)
@@ -155,8 +208,8 @@ class StudipImpress extends StudipPlugin implements StandardPlugin
         foreach ($this->splitStringByWhitespace($string) as $option) {
 
             # option is a property => data-* attributes
-            if (preg_match('/^(\w+)=([\w-.]+)$/', $option, $matches)) {
-                $attributes[$matches[1]] = $matches[2];
+            if (preg_match('/^([\w-]+)=([\w-.]+)$/', $option, $matches)) {
+                $attributes[$matches[1]] = htmlReady($matches[2]);
             }
 
             # option starts with a dot => additional class
@@ -178,25 +231,21 @@ class StudipImpress extends StudipPlugin implements StandardPlugin
         return preg_split('/[[:space:]]/', $string, -1, PREG_SPLIT_NO_EMPTY);
     }
 
-    function areSlidesPositioned($slides)
+    function hasOptions($slides)
     {
-        foreach ($slides as $slide) {
-            if (isset($slide["options"]["x"]) || isset($slide["options"]["y"])) {
+        foreach ($slides['slides'] as $slide) {
+            # TODO böser check
+            if ($slide['options'] != array('class' => 'step')) {
+                return true;
+            }
+
+            if (isset($slide['slides']) && $this->hasOptions($slide)) {
                 return true;
             }
         }
         return false;
     }
 
-    function positionSlides($slides)
-    {
-        $index = 0;
-        foreach ($slides as &$slide) {
-            $slide["options"]["x"] = $index++ * 1000;
-            $slide["options"]["class"] .= " slide";
-        }
-        return $slides;
-    }
 
    /**
      * Return a navigation object representing this plugin in the

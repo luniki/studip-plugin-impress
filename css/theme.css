@@ -1,5 +1,12 @@
 body {
-    font-family: 'Quicksand', Verdana, sans-serif;
+    font-family: 'Open Sans', Verdana, sans-serif;
+
+    background: rgb(215, 215, 215);
+    background: -webkit-gradient(radial, 50% 50%, 0, 50% 50%, 500, from(rgb(240, 240, 240)), to(rgb(190, 190, 190)));
+    background: -webkit-radial-gradient(rgb(240, 240, 240), rgb(190, 190, 190));
+    background:    -moz-radial-gradient(rgb(240, 240, 240), rgb(190, 190, 190));
+    background:      -o-radial-gradient(rgb(240, 240, 240), rgb(190, 190, 190));
+    background:         radial-gradient(rgb(240, 240, 240), rgb(190, 190, 190));
 }
 
 a {
@@ -13,43 +20,271 @@ a:hover {
     text-shadow: -1px -1px 2px rgba(100,100,100,0.5);
 }
 
-h1, h1 a {
-        font-size: 68px;
-        line-height: 72px;
-        margin-bottom: 10px;
-}
-h2 {
-        font-size: 42px;
-}
-h4 {
-        font-size: 32px;
-        line-height: 32px;
-        margin-left: 50px;
-}
-
-.step {
-    font-family: 'Quicksand', Verdana, sans-serif;
-
+.step, .nested-step {
     font-size: 26px;
     line-height: 1.5;
+    width: 900px;
+    min-height: 50px;
+    padding: 40px;
 }
+
+h1, h1 a {
+        font-size: 2.5em;
+        line-height: 2.75em;
+        margin-bottom: 0.4em;
+
+        text-shadow: #333 -2px 2px 3px;
+}
+
+h2 {
+        font-size: 1.5em;
+}
+
+h4 {
+        font-size: 1.25em;
+        line-height: 1.25em;
+        margin-left: 2em;
+}
+
 
 .step ul {
         margin-left: 20px;
 }
 .step ul li {
         list-style: disc;
-        font-size: 20px;
+        font-size: 0.75em;
 }
 
 .step big {
-    font-size: 190px;
+    font-size: 4.5em;
 }
 
 .step small {
-    font-size: 32px;
+    font-size: 0.75em;
 }
 
 .step .indent {
-    padding-left: 1.5em;
+    padding-left: 3em;
+}
+
+.slide, div[data-template=simple] .step {
+    display: block;
+
+    width: 900px;
+    height: 700px;
+
+    padding: 40px 60px;
+
+    border-radius: 10px;
+
+    background-color: white;
+
+    box-shadow: 0 2px 6px rgba(0, 0, 0, .1);
+    border: 1px solid rgba(0, 0, 0, .3);
+
+    color: rgb(102, 102, 102);
+    text-shadow: 0 2px 2px rgba(0, 0, 0, .1);
+
+    font-size: 1.75em;
+    line-height: 2.25em;
+}
+
+/************/
+/** shower **/
+/************/
+
+body.template-shower {
+    font: 25px/1.8 'Open Sans', sans-serif;
+    counter-reset: paging;
+    position:absolute;
+    top:50%;
+    left:50%;
+    overflow:hidden;
+    margin:-320px 0 0 -512px;
+    width:1024px;
+    height:640px !important;
+    background: url(../images/linen.png);
+}
+
+body.template-shower .step {
+    background:#FFF;
+}
+
+body.template-shower .step section {
+    width:784px;
+    height:560px;
+    color:#000;
+}
+
+body.template-shower .step section:before {
+    position:absolute;
+    top:0;
+    right:120px;
+    width:40px;
+    height:120px;
+    background:url(../images/ribbon.svg) no-repeat;
+    content:'';
+}
+
+body.template-shower .step p {
+    margin: 0 0 45px;
+}
+
+body.template-shower .step a {
+    border-bottom:0.1em solid;
+    color:#0174A7;
+    text-decoration:none;
+}
+
+body.template-shower .step b,
+body.template-shower .step strong {
+    font-weight:bold;
+}
+body.template-shower .step i,
+body.template-shower .step em {
+    font-style:italic;
+}
+
+body.template-shower .step code {
+    padding:3px 8px;
+    -webkit-border-radius:8px;
+    -moz-border-radius:8px;
+    border-radius:8px;
+    background:#FAFAA2;
+    color:#000;
+    -webkit-tab-size:4;
+    -moz-tab-size:4;
+    -o-tab-size:4;
+    tab-size:4;
+    font-family:monospace;
+}
+/* Lists */
+body.template-shower .step ol,
+body.template-shower .step ul {
+    margin:0 0 45px;
+    counter-reset:list;
+}
+body.template-shower .step ul ul,
+body.template-shower .step ol ul,
+body.template-shower .step ol ol,
+body.template-shower .step ul ol {
+    margin:0 0 0 38px;
+}
+body.template-shower .step ol > li:before,
+body.template-shower .step ul > li:before {
+    position:absolute;
+    margin-left:-120px;
+    width:100px;
+    color:#BBB;
+    text-align:right;
+}
+body.template-shower .step ul > li:before {
+    content:'\2022'; /* bull */
+    line-height:1.1;
+    font-size:40px;
+}
+body.template-shower .step ol > li:before {
+    counter-increment:list;
+    content:counter(list)'.';
+}
+
+/* Cover */
+body.template-shower .step.cover section  {
+    background: none;
+    overflow:hidden;
+    color: white;
+}
+
+body.template-shower .step.cover h1,
+body.template-shower .step.cover h2 {
+    text-align: center;
+    font-weight: 700;
+}
+
+
+body.template-shower .step.cover section:before {
+    display:none;
+}
+body.template-shower .step.cover img,
+body.template-shower .step.cover svg,
+body.template-shower .step.cover video,
+body.template-shower .step.cover object {
+    position:absolute;
+    top:0;
+    left:50%;
+    z-index:-1;
+    height:100%;
+    -webkit-transform:translateX(-50%);
+    -moz-transform:translateX(-50%);
+    -ms-transform:translateX(-50%);
+    -o-transform:translateX(-50%);
+    transform:translateX(-50%);
+}
+
+/* Shout */
+body.template-shower .step.shout section:before {
+    display:none;
+}
+body.template-shower .step.shout h2 {
+    position:absolute;
+    top:50%;
+    left:0;
+    width:100%;
+    text-align:center;
+    line-height:1;
+    font-size:120px;
+    -webkit-transform:translateY(-50%);
+    -moz-transform:translateY(-50%);
+    -ms-transform:translateY(-50%);
+    -o-transform:translateY(-50%);
+    transform:translateY(-50%);
+}
+
+
+
+/** TITLE STEP **/
+
+/* do not show ribbon */
+body.template-shower .step.first section:before {
+    display: none;
+}
+
+/* do not show bg */
+body.template-shower .step.first {
+    background: none;
+    z-index: -3;
+}
+
+/* do not fade other steps */
+html.first body.template-shower .step:not(.first) {
+    opacity: 0.5;
+}
+
+html.first .step:not(.first) {
+    overflow: hidden;
+}
+
+body.template-shower .step:not(.first):hover {
+    opacity: 1 !important;
+}
+
+/* style first step */
+body.template-shower .step.first section {
+    color:#3C3D40;
+    text-shadow:0 1px 1px #8D8E90;
+}
+
+body.template-shower h1,
+body.template-shower h2 {
+    font: bold 50px/1 'Open Sans', sans-serif;
+    text-shadow: 0px 1px 1px #8D8E90;
+}
+
+/* hack jmpress */
+html.first body {
+    height: auto !important;
+    overflow: auto !important;
+    position: relative;
+    margin: auto;
+    left: 0;
 }
