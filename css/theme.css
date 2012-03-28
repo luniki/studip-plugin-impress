@@ -178,15 +178,6 @@ body.template-shower .step ul > li:before {
     color:#BBB;
     text-align:right;
 }
-body.template-shower .step ul > li:before {
-    content:'\2022'; /* bull */
-    line-height:1.1;
-    font-size:40px;
-}
-body.template-shower .step ol > li:before {
-    counter-increment:list;
-    content:counter(list)'.';
-}
 
 /* Cover */
 body.template-shower .step.cover section  {
@@ -281,10 +272,27 @@ body.template-shower h2 {
 }
 
 /* hack jmpress */
-html.first body {
-    height: auto !important;
-    overflow: auto !important;
-    position: relative;
-    margin: auto;
-    left: 0;
+html body.template-shower {
+    overflow: visible !important;
+}
+
+html.first {
+    overflow: visible !important;
+}
+
+body.template-shower,
+body.template-shower * {
+
+    -webkit-transition-delay: 0s !important;
+    -moz-transition-delay:    0s !important;
+    -ms-transition-delay:     0s !important;
+    -o-transition-delay:      0s !important;
+    transition-delay:         0s !important;
+
+    -webkit-transition-duration: 0s !important;
+    -moz-transition-duration:    0s !important;
+    -ms-transition-duration:     0s !important;
+    -o-transition-duration:      0s !important;
+    transition-duration:         0s !important;
+
 }

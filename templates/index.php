@@ -14,7 +14,7 @@
 
 <div id="jmpress" data-template="<?= htmlReady($page['meta']['template']) ?>">
 
-    <?= $this->render_partial_collection('slide', $page['slides']['slides']) ?>
+    <?= $this->render_partial_collection('slide', $page['slides']) ?>
 
 </div>
 

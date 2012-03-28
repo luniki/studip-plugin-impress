@@ -67,8 +67,8 @@ class StudipImpress extends StudipPlugin implements StandardPlugin
                                           '\{:(\w[-\w]*):',
                                           ':\}',
                                           'StudipImpress::markupImpressMeta');
-            StudipFormat::addStudipMarkup('impress-steps',
-                                          '^@STEP([^\n]*)\n?', NULL, 'StudipImpress::markupImpressStep');
+           # StudipFormat::addStudipMarkup('impress-steps',
+           #                               '^@STEP([^\n]*)\n?', NULL, 'StudipImpress::markupImpressStep');
 
             StudipFormat::addStudipMarkup('impress-steps2',
                                           '\[step(.*?)?\]',
@@ -106,7 +106,7 @@ class StudipImpress extends StudipPlugin implements StandardPlugin
         $page['meta'] = $this->extractMetaData($page);
 
         # generate slides from wiki markup
-        $tree = $this->extractSlides($page);
+        $tree = $this->_extractSlides($page);
 
         if (!$this->hasOptions($tree) && !isset($page['meta']['template'])) {
             $page['meta']['template'] = 'simple';
@@ -130,6 +130,26 @@ class StudipImpress extends StudipPlugin implements StandardPlugin
             }
         }
         return $meta;
+    }
+    function _extractSlides($page)
+    {
+        $body = wikiReady($page['body'], FALSE);
+        $result = preg_match_all('/^(@STEP.*)$/m', $body, $matches,
+                                 PREG_OFFSET_CAPTURE);
+
+        $slides = array();
+        for ($i = 0, $offsets = $matches[0]; $i < sizeof($offsets); ++$i) {
+            $next    = @$offsets[$i + 1][1] ?: strlen($body);
+            $divider = $offsets[$i][0];
+            $offset  = $offsets[$i][1] + strlen($divider) + 1;
+
+            $slides[] = array(
+                "options" => $this->extractOptions($divider),
+                "text"    => substr($body, $offset, $next - $offset)
+            );
+        }
+
+        return $slides;
     }
 
     function extractSlides($page)
@@ -233,13 +253,9 @@ class StudipImpress extends StudipPlugin implements StandardPlugin
 
     function hasOptions($slides)
     {
-        foreach ($slides['slides'] as $slide) {
+        foreach ($slides as $slide) {
             # TODO böser check
             if ($slide['options'] != array('class' => 'step')) {
-                return true;
-            }
-
-            if (isset($slide['slides']) && $this->hasOptions($slide)) {
                 return true;
             }
         }
